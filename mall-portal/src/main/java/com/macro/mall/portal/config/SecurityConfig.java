@@ -58,7 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new GoAuthenticationEntryPoint())
                 .and()
                 .formLogin()
-                .loginPage("/sso/login")
+//注释掉loginpage否则在app中无法访问登录接口            
+//                .loginPage("/sso/login")
                 .successHandler(new GoAuthenticationSuccessHandler())
                 .failureHandler(new GoAuthenticationFailureHandler())
                 .and()
