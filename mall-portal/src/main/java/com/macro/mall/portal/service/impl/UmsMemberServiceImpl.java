@@ -91,7 +91,36 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         umsMember.setPassword(null);
         return CommonResult.success(null,"注册成功");
     }
+        @Override
+    public CommonResult login(String telephone, String authCode) {
+        String token = null;
+        JSONObject jsonObject = new JSONObject();
+        UmsMemberExample example = new UmsMemberExample();
+//        通过手机号查询是否存在账号
+        example.createCriteria().andPhoneEqualTo(telephone);
+        List<UmsMember> memberList = memberMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(memberList)){
+            return CommonResult.failed("该账号不存在");
+        }
+        //验证验证码
+        if(!verifyAuthCode(authCode,telephone)){
+            return CommonResult.failed("验证码错误");
+        }
+        UmsMember umsMember = memberList.get(0);
+        try {
 
+            token = JWT.create()
+                    .withAudience(umsMember.getId().toString())          // 将 user id 保存到 token 里面
+                    .sign(Algorithm.HMAC256(umsMember.getPassword()));   // 以 password 作为 token 的密钥
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        jsonObject.put("token", token);
+        jsonObject.put("user", umsMember);
+
+        return CommonResult.success(jsonObject,"登陆成功");
+    }
     @Override
     public CommonResult generateAuthCode(String telephone) {
         StringBuilder sb = new StringBuilder();
