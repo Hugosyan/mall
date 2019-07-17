@@ -31,7 +31,13 @@ public class UmsMemberController {
                                  @RequestParam String authCode) {
         return memberService.register(username, password, telephone, authCode);
     }
-
+    @ApiOperation("登陆以后返回token")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult login(@RequestParam String telephone,
+                                 @RequestParam String authCode) {
+        return memberService.login(telephone, authCode);
+    }
     @ApiOperation("获取验证码")
     @RequestMapping(value = "/getAuthCode", method = RequestMethod.GET)
     @ResponseBody
