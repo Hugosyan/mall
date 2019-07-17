@@ -24,6 +24,9 @@ public interface UmsMemberService {
      */
     @Transactional
     CommonResult register(String username, String password, String telephone, String authCode);
+//    用户登录
+    @Transactional
+    CommonResult login(String telephone, String authCode);
 
     /**
      * 生成验证码
